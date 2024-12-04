@@ -13,6 +13,7 @@ import { IoMdTime } from "react-icons/io";
 
 import Shop from "../assets/images/15861 (1).jpg";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 // Define a custom marker icon
 const customIcon = L.icon({
@@ -29,6 +30,11 @@ const Home = () => {
     { id: 2, name: "Store 2", lat: 11.268019021984289, lng: 75.94278694739964 },
     { id: 3, name: "Store 3", lat: 10.527642, lng: 76.214434 },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+   
+  };
 
   return (
     <section className=" space-y-10 ">
@@ -59,10 +65,13 @@ const Home = () => {
 
           <div className="flex gap-3 justify-center">
             <button className="border h-11 px-8 rounded-xl text-sm font-medium tracking-wider border-main hover:border-main text-main hover:text-white hover:bg-black duration-200">
-                Reset
+              Reset
             </button>
-            <button className="border border-gray-300 h-11 px-8 rounded-xl text-sm font-medium tracking-wider bg-main text-white hover:bg-black duration-200">
-                Search
+            <button
+              onClick={handleSearch}
+              className="border border-gray-300 h-11 px-8 rounded-xl text-sm font-medium tracking-wider bg-main text-white hover:bg-black duration-200"
+            >
+              Search
             </button>
           </div>
         </form>
@@ -194,56 +203,58 @@ const Home = () => {
               </div>
             </div>
           </div>
-          {/*  */
-           <div className="border p-5 rounded-xl hover:bg-gray-100 hover:border-main duration-500 hover:shadow-lg">
-           <div className="pt-3 text-sm flex flex-col gap-3">
-             {/* <img className="rounded-lg" src={Shop} alt="" /> */}
+          {
+            /*  */
+            <div className="border p-5 rounded-xl hover:bg-gray-100 hover:border-main duration-500 hover:shadow-lg">
+              <div className="pt-3 text-sm flex flex-col gap-3">
+                {/* <img className="rounded-lg" src={Shop} alt="" /> */}
 
-             <p className="text-lg font-semibold">ABC Enterprise</p>
+                <p className="text-lg font-semibold">ABC Enterprise</p>
 
-             <span className="flex gap-2">
-               <div>
-                 <IoMdTime className="text-xl text-main" />
-               </div>
-               <p>open until 08:30 PM</p>
-             </span>
-             <span className="flex gap-2">
-               <div>
-                 <HiMiniBuildingOffice className="text-xl text-main" />
-               </div>
-               <p>
-                 Lorem ipsum dolor sit amet consectetur,<br></br> adipisicing
-                 elit. Odio,<br></br> recusandae. 67300
-               </p>
-             </span>
-             <p className="font-semibold">Call to check for home delivery</p>
-             <div className="flex items-center justify-between gap-3">
-               <div className="flex items-center gap-3">
-                 <div className="relative group">
-                   <button className="bg-transparent text-main hover:bg-main hover:text-white border p-2 w-fit rounded-lg flex items-center justify-center gap-2">
-                     <FaPhone className="text-lg" />
-                   </button>
-                   <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block text-xs px-2 bg-gray-600 text-white p-1 rounded-lg shadow-lg">
-                     Call
-                   </span>
-                 </div>
-                 <div className="relative group">
-                   <button className="bg-transparent text-main hover:bg-main hover:text-white border p-2 w-fit rounded-lg flex items-center justify-center gap-2">
-                     <BiSolidMessageMinus className="text-lg" />
-                   </button>
-                   <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block text-xs px-2 bg-gray-600 text-white p-1 rounded-lg shadow-lg">
-                     Message
-                   </span>
-                 </div>
-               </div>
+                <span className="flex gap-2">
+                  <div>
+                    <IoMdTime className="text-xl text-main" />
+                  </div>
+                  <p>open until 08:30 PM</p>
+                </span>
+                <span className="flex gap-2">
+                  <div>
+                    <HiMiniBuildingOffice className="text-xl text-main" />
+                  </div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur,<br></br> adipisicing
+                    elit. Odio,<br></br> recusandae. 67300
+                  </p>
+                </span>
+                <p className="font-semibold">Call to check for home delivery</p>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="relative group">
+                      <button className="bg-transparent text-main hover:bg-main hover:text-white border p-2 w-fit rounded-lg flex items-center justify-center gap-2">
+                        <FaPhone className="text-lg" />
+                      </button>
+                      <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block text-xs px-2 bg-gray-600 text-white p-1 rounded-lg shadow-lg">
+                        Call
+                      </span>
+                    </div>
+                    <div className="relative group">
+                      <button className="bg-transparent text-main hover:bg-main hover:text-white border p-2 w-fit rounded-lg flex items-center justify-center gap-2">
+                        <BiSolidMessageMinus className="text-lg" />
+                      </button>
+                      <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block text-xs px-2 bg-gray-600 text-white p-1 rounded-lg shadow-lg">
+                        Message
+                      </span>
+                    </div>
+                  </div>
 
-               <Link className="flex gap-1 items-center capitalize hover:underline">
-                  <PiEye className="text-base text-main" />
-                  <p className="text-xs">view store details</p>
-                </Link>
-             </div>
-           </div>
-         </div>}
+                  <Link className="flex gap-1 items-center capitalize hover:underline">
+                    <PiEye className="text-base text-main" />
+                    <p className="text-xs">view store details</p>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     </section>
