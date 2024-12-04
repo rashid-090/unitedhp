@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -19,50 +19,62 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import api from "../../utils/api";
+import { useSearchParams } from "react-router-dom";
 
 const Alldelers = () => {
-  const initialDealers = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      image: "https://via.placeholder.com/50",
-      state: "California",
-      active: true,
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@example.com",
-      image: "https://via.placeholder.com/50",
-      state: "New York",
-      active: false,
-    },
-    {
-      id: 3,
-      name: "Sam Wilson",
-      email: "sam@example.com",
-      image: "https://via.placeholder.com/50",
-      state: "Texas",
-      active: true,
-    },
-    {
-      id: 4,
-      name: "Lisa Brown",
-      email: "lisa@example.com",
-      image: "https://via.placeholder.com/50",
-      state: "Florida",
-      active: false,
-    },
-  ];
-
-  const [dealerData, setDealerData] = useState(initialDealers);
+  const [dealerData, setDealerData] = useState([]);
   const [filter, setFilter] = useState("");
   const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(4);
+  const [rowsPerPage] = useState(10);
+  const [avalableDealersCount, setAvalableDealersCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dealerToToggle, setDealerToToggle] = useState(null);
+
+  // Filteration
+
+  const [search, setSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleFilter = (type, value) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value === "") {
+      if (type === "page") {
+        setPage(1);
+      }
+      params.delete(type);
+    } else {
+      if (type === "page" && value === 1) {
+        params.delete(type);
+        setPage(1);
+      } else {
+        params.set(type, value);
+        if (type === "page") {
+          setPage(value);
+        }
+      }
+    }
+    setSearchParams(params.toString() ? "?" + params.toString() : "");
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const res = await api.get("super-admin/admins");
+        console.log(res);
+        setDealerData(res?.data?.admins);
+        setAvalableDealersCount(res?.data?.totalAvailableAdmins);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [searchParams]);
 
   // Pagination logic
   const filteredData = dealerData.filter(
@@ -122,19 +134,23 @@ const Alldelers = () => {
               label="Search by Name, Email"
               variant="outlined"
               fullWidth
-              value={filter}
-              onChange={handleFilterChange}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
           <div className="w-full">
             {/* Filter Input */}
-            <TextField
-              label="Search by State"
-              variant="outlined"
-              fullWidth
-              value={filter}
-              onChange={handleFilterChange}
-            />
+            <TextField label="Search by State" variant="outlined" fullWidth />
+          </div>
+          <div className="w-full">
+            {/* Filter Input */}
+            <Button
+              variant="contained"
+              color="success"
+              size="small"
+              onClick={() => handleFilter("search", search)}
+            >
+              Search
+            </Button>
           </div>
         </div>
 
@@ -205,7 +221,7 @@ const Alldelers = () => {
         <div className="w-fit mx-auto py-3">
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(filteredData.length / rowsPerPage)}
+              count={Math.ceil(avalableDealersCount / rowsPerPage)}
               page={page}
               onChange={handlePageChange}
               siblingCount={1}

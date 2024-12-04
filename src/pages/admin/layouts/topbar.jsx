@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
-import Logo from '../../../../public/hp_logo.png'
+import React, { useState } from "react";
+import Logo from "../../../../public/hp_logo.png";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/store";
+import { toast } from "react-toastify";
+import api from "../../../utils/api";
 const Topbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      const res = await api.get("user/logout");
+      if (res.status) {
+        dispatch(logout);
+        toast.success("Logout success");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Error while logging out");
+    } finally {
+    }
   };
 
   return (
@@ -15,11 +35,7 @@ const Topbar = () => {
           onClick={toggleModal}
           className="p-1 rounded-full bg-gray-300 hover:bg-gray-200 focus:outline-none"
         >
-          <img
-            src={Logo}
-            alt="User Avatar"
-            className="w-9 h-9 rounded-full"
-          />
+          <img src={Logo} alt="User Avatar" className="w-9 h-9 rounded-full" />
         </button>
       </div>
 
@@ -28,13 +44,13 @@ const Topbar = () => {
         <div className="absolute top-16 text-sm border right-2 bg-white shadow-lg rounded-md py-2 w-fit z-50">
           <button
             className="w-full text-left px-4 py-2 hover:bg-gray-100"
-            onClick={() => alert('Profile clicked')}
+            onClick={() => alert("Profile clicked")}
           >
             Profile
           </button>
           <button
             className="w-full text-left px-4 py-2 hover:bg-gray-100"
-            onClick={() => alert('Logout clicked')}
+            onClick={handleLogout}
           >
             Logout
           </button>

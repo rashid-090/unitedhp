@@ -44,7 +44,7 @@ const Header = () => {
            </div>
             <div className='flex items-center gap-4 text-xl'>
                {socialLinks.map((lnks,i)=>(
-                <a className='hover:text-main duration-200' href={lnks.link} target='_blank'>{lnks.icon}</a>
+                <a key={i} className='hover:text-main duration-200' href={lnks.link} target='_blank'>{lnks.icon}</a>
                ))}
             </div>
         </div>

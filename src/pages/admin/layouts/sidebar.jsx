@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../../../../public/hp_logo.png';
 import { FaHome, FaChartLine, FaCog, FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { FaLocationDot } from 'react-icons/fa6';
 
 const Sidebar = ({ onSidebarOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,8 @@ const Sidebar = ({ onSidebarOpen }) => {
         { title: 'add delers', link: '/add-delers' },
       ],
     },
-    // { icon: <FaChartLine />, title: 'Analytics', link: '/analytics' },
+
+    { icon: <FaLocationDot />, title: 'Add location', link: '/location-manage' },
     // { icon: <FaCog />, title: 'Settings', link: '/settings' },
     // { icon: <FaHome />, title: 'Delers', link: '/delers' },
   ];
@@ -34,6 +36,7 @@ const Sidebar = ({ onSidebarOpen }) => {
   const handleMouseLeave = () => {
     setIsOpen(false);
     onSidebarOpen(false);
+    setIsHomeSubmenuOpen(false)
   };
 
   const toggleHomeSubmenu = () => {
