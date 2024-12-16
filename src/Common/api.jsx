@@ -5,7 +5,7 @@ import { handleError } from "./configurations";
 import axios from "axios";
 
 // export const URL = "https://exiphones.shop/api";
-export const URL = "http://localhost:4000/api";
+export const URL = "https://united-hp-server.onrender.com/api";
 export const cloudinaryURL = "https://res.cloudinary.com/ddv3f8yl2/image/upload/v1733727801/";
 
 const apiInstance = axios.create({
