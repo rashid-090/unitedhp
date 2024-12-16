@@ -19,12 +19,16 @@ import Sidebar from "./pages/admin/layouts/sidebar";
 import Topbar from "./pages/admin/layouts/topbar";
 import Login from "./pages/admin/login";
 import Dashboard from "./pages/admin/dashboard";
-import AddDeler from "./pages/admin/add_deler";
-import AllDeler from "./pages/admin/All_delers";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "./redux/store";
-import api from "./utils/api";
 import DistrictCityManager from "./pages/admin/DistrictCityManager";
+import { getUserDataFirst } from "./redux/actions/userActions";
+import StoreInner from "./pages/StoreInner";
+import AllDealer from "./pages/admin/All_delers";
+import AddDealer from "./pages/admin/add_deler";
+import EditStore from "./pages/admin/EditStore";
+import Loading from "./components/Loading";
+import ProfilePage from "./pages/admin/ProfilePage";
+import EditProfile from "./pages/admin/EditProfile";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,7 +39,7 @@ const AdminLayout = () => {
     <>
       <ScrollToTop />
       <ToastContainer position="bottom-right" />
-      <div className="2xl:max-w-[1536px] relative mx-auto min-h-screen flex flex-col justify-between">
+      <div className="2xl:max-w-[100%] relative mx-auto min-h-screen flex flex-col justify-between">
         <div className="relative h-screen">
           {!isLoginPage && <Sidebar onSidebarOpen={setIsSidebarOpen} />}
           <div
@@ -63,7 +67,7 @@ const UserLayout = () => {
     <>
       <ScrollToTop />
       <ToastContainer position="bottom-right" />
-      <div className="2xl:max-w-[1536px] relative mx-auto min-h-screen flex flex-col justify-between">
+      <div className="2xl:max-w-[100%] relative mx-auto min-h-screen flex flex-col justify-start ">
         <Header />
         <Outlet />
         <Footer />
@@ -73,57 +77,116 @@ const UserLayout = () => {
 };
 
 function App() {
-  const [isAdminView, setIsAdminView] = useState(false); //  admin view
-  const [isLoading, setIsLoading] = useState(true);
 
-  const user = useSelector((state) => state.user.value);
+  const { user, loading } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setIsLoading(true);
+    if (!user) {
+      dispatch(getUserDataFirst());
+    }
+  }, [dispatch, user]);
 
-        const res = await api.get("user");
-        dispatch(login(res.data));
-        console.log(res);
-        if (res?.data?.role === "superAdmin") {
-          setIsAdminView(true);
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [dispatch]);
-
-  if (isLoading) {
-    return <h1>Loading</h1>;
+  if (loading) {
+    return <Loading />;
   }
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: isAdminView ? <AdminLayout /> : <UserLayout />,
+      element: user ? (
+        user.role === "superAdmin" ? (
+          <AdminLayout />
+        ) : (
+          <UserLayout />
+        )
+      ) : (
+        <UserLayout />
+      ),
       children: [
-        // User Routes
-        ...(!isAdminView
+        // Admin Routes
+        ...(user && user.role === "superAdmin"
           ? [
               {
                 path: "/",
                 element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
+                  <Suspense fallback={<Loading/>}>
+                    <Dashboard />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "/location-manage",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <DistrictCityManager />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "/add-dealers",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <AddDealer />
+                  </Suspense>
+                ),
+              },
+
+              {
+                path: "/all-dealers",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <AllDealer />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "/edit-store/:id",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <EditStore />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "/profile",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <ProfilePage />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "/edit-profile",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <EditProfile />
+                  </Suspense>
+                ),
+              },
+            ]
+          : [
+              {
+                path: "/",
+                element: (
+                  <Suspense fallback={<Loading/>}>
                     <Home />
                   </Suspense>
                 ),
               },
               {
+                path: "/store/:id",
+                element: (
+                  <Suspense fallback={<Loading/>}>
+                    <StoreInner />
+                  </Suspense>
+                ),
+              },
+
+              {
                 path: "/login",
                 element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
+                  <Suspense fallback={<Loading/>}>
                     <Login />
                   </Suspense>
                 ),
@@ -132,50 +195,13 @@ function App() {
               {
                 path: "*",
                 element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
+                  <Suspense fallback={<Loading/>}>
                     <p>page not found</p>
                   </Suspense>
                 ),
               },
-            ]
-          : []),
-        // Admin Routes
-        ...(isAdminView
-          ? [
-              {
-                path: "/",
-                element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
-                    <Dashboard />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/location-manage",
-                element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
-                    <DistrictCityManager />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/add-delers",
-                element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
-                    <AddDeler />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/all-delers",
-                element: (
-                  <Suspense fallback={<p>Loading screen..</p>}>
-                    <AllDeler />
-                  </Suspense>
-                ),
-              },
-            ]
-          : []),
+            ]),
+        // User Routes
       ],
     },
   ]);

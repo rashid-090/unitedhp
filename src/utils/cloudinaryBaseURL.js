@@ -1,0 +1,1 @@
+export const cloudinary = 'https://res.cloudinary.com/ddv3f8yl2/image/upload/v1733909978/'
