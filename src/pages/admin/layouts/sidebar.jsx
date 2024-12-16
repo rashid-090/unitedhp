@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import Logo from '../../../../public/hp_logo.png';
-import { FaHome, FaChartLine, FaCog, FaChevronDown, FaChevronRight } from 'react-icons/fa';
-import { FaLocationDot } from 'react-icons/fa6';
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Logo from "../../../../public/hp_logo.png";
+import {
+  FaHome,
+  FaChartLine,
+  FaCog,
+  FaChevronDown,
+  FaChevronRight,
+} from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
 
 const Sidebar = ({ onSidebarOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,21 +18,23 @@ const Sidebar = ({ onSidebarOpen }) => {
   const menuItems = [
     {
       icon: <FaHome />,
-      title: 'Delers',
-      link:`#`,
+      title: "dealers",
+      link: `#`,
       hasSubmenu: true,
       submenu: [
-        { title: 'view delers', link: '/all-delers' },
-        { title: 'add delers', link: '/add-delers' },
+        { title: "view dealers", link: "/all-dealers" },
+        { title: "add dealers", link: "/add-dealers" },
       ],
     },
 
-    { icon: <FaLocationDot />, title: 'Add location', link: '/location-manage' },
+    {
+      icon: <FaLocationDot />,
+      title: "Add location",
+      link: "/location-manage",
+    },
     // { icon: <FaCog />, title: 'Settings', link: '/settings' },
-    // { icon: <FaHome />, title: 'Delers', link: '/delers' },
+    // { icon: <FaHome />, title: 'dealers', link: '/dealers' },
   ];
-
-
 
   const handleMouseEnter = () => {
     setIsOpen(true);
@@ -36,7 +44,7 @@ const Sidebar = ({ onSidebarOpen }) => {
   const handleMouseLeave = () => {
     setIsOpen(false);
     onSidebarOpen(false);
-    setIsHomeSubmenuOpen(false)
+    setIsHomeSubmenuOpen(false);
   };
 
   const toggleHomeSubmenu = () => {
@@ -46,8 +54,8 @@ const Sidebar = ({ onSidebarOpen }) => {
   const isActive = (path) => location.pathname === path; // Check if the current path matches the link
 
   const handleMenuItemClick = () => {
-    setIsOpen(false); // Close the sidebar when a menu item is clicked
-    onSidebarOpen(false); // Optional: Notify parent component if needed
+    setIsOpen(false);
+    onSidebarOpen(false);
   };
 
   return (
@@ -55,18 +63,26 @@ const Sidebar = ({ onSidebarOpen }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`fixed left-0 bottom-0 top-0 h-screen bg-gray-800 text-white z-50 transition-all duration-300 ease-in-out ${
-        isOpen ? 'w-40 md:w-64' : 'w-14'
+        isOpen ? "w-40 md:w-64" : "w-14"
       }`}
     >
       <div className="flex flex-col h-full">
         {/* Sidebar Header */}
-        <Link to={'/dashboard'}
-        onClick={handleMenuItemClick}
+        <Link
+          to={"/"}
+          onClick={handleMenuItemClick}
           className={`p-4 font-medium text-lg flex items-center whitespace-nowrap transition-all duration-100 ${
-            isOpen ? 'justify-start' : 'justify-center'
+            isOpen ? "justify-start" : "justify-center"
           }`}
         >
-          {isOpen ? 'United HP' : <img className="h-7 w-7 object-contain" src={Logo} alt="Logo" />}
+          {isOpen ? (
+            <div className="flex">
+              <img className="h-7 w-7 object-contain" src={Logo} alt="Logo" />
+              <p className="px-2">United HP</p>
+            </div>
+          ) : (
+            <img className="h-7 w-7 object-contain" src={Logo} alt="Logo" />
+          )}
         </Link>
 
         {/* Menu Items */}
@@ -76,20 +92,26 @@ const Sidebar = ({ onSidebarOpen }) => {
               <Link to={item.link} key={index}>
                 <div
                   className={`flex items-center gap-4 p-3 md:p-4 hover:bg-gray-700 transition-all duration-300 ease-in-out cursor-pointer ${
-                    isActive(item.link) ? 'bg-gray-600' : ''
+                    isActive(item.link) ? "bg-gray-600" : ""
                   }`}
                   onClick={item.hasSubmenu ? toggleHomeSubmenu : undefined}
                 >
                   <span className="flex-shrink-0 text-xl">{item.icon}</span>
                   <span
                     className={`text-sm whitespace-nowrap capitalize flex-1 transition-opacity duration-300 ${
-                      isOpen ? 'opacity-100' : 'opacity-0'
+                      isOpen ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     {item.title}
                   </span>
                   {item.hasSubmenu && isOpen && (
-                    <span>{isHomeSubmenuOpen ? <FaChevronDown /> : <FaChevronRight />}</span>
+                    <span>
+                      {isHomeSubmenuOpen ? (
+                        <FaChevronDown />
+                      ) : (
+                        <FaChevronRight />
+                      )}
+                    </span>
                   )}
                 </div>
 
@@ -97,14 +119,15 @@ const Sidebar = ({ onSidebarOpen }) => {
                 {item.hasSubmenu && isOpen && (
                   <ul
                     className={`overflow-hidden flex flex-col pl-5 transition-max-height duration-300 ease-in-out ${
-                      isHomeSubmenuOpen ? 'max-h-48' : 'max-h-0'
+                      isHomeSubmenuOpen ? "max-h-48" : "max-h-0"
                     }`}
                   >
                     {item.submenu.map((submenuItem, subIndex) => (
-                      <Link to={submenuItem.link}
+                      <Link
+                        to={submenuItem.link}
                         key={subIndex}
                         className={`p-2 text-sm capitalize hover:bg-gray-700 transition-all duration-300 ease-in-out ${
-                          isActive(submenuItem.link) ? 'bg-gray-600' : ''
+                          isActive(submenuItem.link) ? "bg-gray-600" : ""
                         }`}
                       >
                         {submenuItem.title}
@@ -120,7 +143,7 @@ const Sidebar = ({ onSidebarOpen }) => {
         {/* Footer */}
         <div
           className={`p-4 text-center text-xs transition-opacity text-nowrap duration-300 ${
-            isOpen ? 'opacity-100' : 'opacity-0'
+            isOpen ? "opacity-100" : "opacity-0"
           }`}
         >
           © 2024 All Rights Reserved
